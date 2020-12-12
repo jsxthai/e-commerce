@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# markdown
+md.md
+
 # testing
 /coverage
 
