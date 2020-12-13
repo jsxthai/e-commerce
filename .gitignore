@@ -8,6 +8,9 @@
 # markdown
 md.md
 
+# Optional eslint cache
+.eslintcache
+
 # testing
 /coverage
 
