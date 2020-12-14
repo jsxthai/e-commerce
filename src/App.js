@@ -11,14 +11,26 @@ const App = () => {
         setProducts(data);
     }
 
+    const fetchCart = async () => {
+        const cart = await commerce.cart.retrieve();
+        setCart(cart);
+        // setCart(await commerce.cart.retrieve());
+    }
+
+    const handleAddToCart = async (productId, quantity) => {
+        const { cart } = await commerce.cart.add(productId, quantity);
+        setCart(cart);
+    }
+
     useEffect(() => {
         fetchProducts();
+        fetchCart();
     }, []);
 
     return (
         <div>
-            <Navbar />
-            <Products products={products} />
+            <Navbar totalItems={cart.total_items}/>
+            <Products products={products} onAddToCart={handleAddToCart}/>
         </div>
     )
 }

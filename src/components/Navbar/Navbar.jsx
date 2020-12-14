@@ -5,9 +5,9 @@ import { ShoppingCart } from "@material-ui/icons";
 import logo from '../../assets/img/Shopee-logo.png';
 import useStyles from './styles'
 
-const Narbar = () => {
+const Narbar = ({ totalItems }) => {
     const classes = useStyles();
-
+    
     return (
         <>
             <AppBar position="fixed" className={classes.appBar} color="inherit">
@@ -19,7 +19,7 @@ const Narbar = () => {
                     <div className={classes.grow}></div>
                     <div className={classes.button}>
                         <IconButton aria-label="Show card items" color="inherit">
-                            <Badge badgeContent={99} color="secondary">
+                            <Badge badgeContent={totalItems} color="secondary">
                                 <ShoppingCart />
                             </Badge>
                         </IconButton>
