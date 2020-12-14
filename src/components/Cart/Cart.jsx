@@ -13,9 +13,9 @@ const Cart = ({ cart }) => {
     console.log('cart', cart);
     const FilledCart = () => (
         <>
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
                 {cart.line_items.map((item) => (
-                    <Grid item xs={12} sm={3} key={item.id}>
+                    <Grid item xs={12} sm={6} md={4} key={item.id}>
                         <CardItem item={item}/>
                     </Grid>
                 ))}
@@ -35,7 +35,7 @@ const Cart = ({ cart }) => {
     return (
         <Container>
             <div className={classes.toolbar} /> 
-            <Typography className={classes.title} variant="h3">Your shopping cart</Typography>
+            <Typography className={classes.title} variant="h3" gutterBottom>Your shopping cart</Typography>
             { !cart.line_items.length ? <EmptyCart /> : <FilledCart />}
         </Container>
     )
