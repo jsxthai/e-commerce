@@ -1,11 +1,17 @@
-import React from 'react'
+import React from 'react';
+import { Typography, Button, Divider } from '@material-ui/core';
+import { Element, CardElement, ElementsConsumer } from '@stripe/react-stripe-js';
+import { loadStrip } from '@stripe/stripe-js';
 
-const PaymentForm = () => {
+import Review from './Review';
+
+const PaymentForm = ({ checkoutToken }) => {
     return (
-        <div>
-            Payment form
-        </div>
+        <>
+            <Review checkoutToken={checkoutToken}/>
+            <Divider />
+        </>
     )
 }
 
-export default PaymentForm
+export default PaymentForm;
