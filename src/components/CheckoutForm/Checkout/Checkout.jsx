@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider, Button } from '@material-ui/core';
+import { Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider, Button, CssBaseline } from '@material-ui/core';
+import { Link, useHistory } from 'react-router-dom';
 
 import useStyles from './styles.js';
 import AddressForm from '../AddressForm';
@@ -13,6 +14,8 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
     const [activeStep, setActiveStep] = useState(0);
     const [checkoutToken, setCheckoutToken] = useState(null);
     const [shippingData, setShippingData] = useState({});
+    const [isFinished, setIsFinished] = useState(false);
+    const history = useHistory();
 
     useEffect(() => {
         const generateToken = async () => {
@@ -20,20 +23,47 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
                 const token = await commerce.checkout.generateToken(cart.id, { type: 'cart' });
                 setCheckoutToken(token);
             } catch (error) {
-                
+                history.pushState('/');
             }
         }
 
         generateToken();
     }, [cart])
 
-    const Confirmation = () => (
-        <div>
-            Confirmation
-        </div>
-    );
+    // case: no credit cart
+    const timeout = () => {
+        setTimeout(() => {
+            setIsFinished(true)
+        }, 3000);
+    }
+
+    const Confirmation = () => order.customer ? (
+        <>
+            <div>
+                <Typography variant="h5">Thank you for your purchase, {order.customer.firstname} {order.customer.lastname}</Typography>
+                <Divider />
+                <Typography variant="subtitle2">Order ref: {order.customer_reference}</Typography>
+            </div>
+            <br />
+            <Button component={Link} to='/' variant='outlined' type="button">Back to Home</Button>
+        </>
+    ) : isFinished 
+        ? (
+            <>
+            <div>
+                <Typography variant="h5">Thank you for your purchase</Typography>
+                <Divider />
+            </div>
+            <br />
+            <Button component={Link} to='/' variant='outlined' type="button">Back to Home</Button>
+        </>
+        ) 
+        : (
+            <div className={classes.spinner}>
+                <CircularProgress />
+            </div>
+        )
     
-    // link: https://stackoverflow.com/questions/56404819/usestate-hook-setstate-function-accessing-previous-state-value
     // https://reactjs.org/docs/hooks-reference.html#functional-updates
     const nextStep = () => setActiveStep((preActiveStep) => preActiveStep + 1);
     const backStep = () => setActiveStep((preActiveStep) => preActiveStep - 1);
@@ -42,6 +72,14 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
         setShippingData(data)
         
         nextStep();
+    }
+
+    if(error) {
+        <>
+            <Typography variant='h5'>Error: {error}</Typography>
+            <br />
+            <Button component={Link} to='/' variant='outlined' type="button">Back to Home</Button>
+        </>
     }
     
     const Form  = () => activeStep === 0 
@@ -52,10 +90,12 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
             backStep={backStep} 
             nextStep={nextStep}
             onCaptureCheckout={onCaptureCheckout}
+            timeout={timeout}
         />;
 
     return (
         <>
+            <CssBaseline />
             <div className={classes.toolbar} />
             <main className={classes.layout}>
                 <Paper className={classes.paper}>

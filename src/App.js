@@ -47,10 +47,12 @@ const App = () => {
 
     const handleCaptureCheckout = async (checkoutTokenId, newOrder) => {
         try {
+            // case: no credit cart, refreshCart()
+            refreshCart();
             const incomingOder = await commerce.checkout.capture(checkoutTokenId, newOrder);
 
             setOrder(incomingOder);
-            refreshCart();
+            // refreshCart();
         } catch (error) {
             setErrorMessage(error.data.error.message)
         }
