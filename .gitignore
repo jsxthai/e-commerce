@@ -5,9 +5,6 @@
 /.pnp
 .pnp.js
 
-# markdown
-md.md
-
 # Optional eslint cache
 .eslintcache
 
