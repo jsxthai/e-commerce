@@ -8,7 +8,7 @@ import { commerce } from '../../../lib/commerce.js';
 
 const steps = ['Shipping address', 'Payment details'];
 
-const Checkout = ({ cart }) => {
+const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
     const [checkoutToken, setCheckoutToken] = useState(null);
@@ -19,7 +19,6 @@ const Checkout = ({ cart }) => {
             try {
                 const token = await commerce.checkout.generateToken(cart.id, { type: 'cart' });
                 setCheckoutToken(token);
-                console.log(token)
             } catch (error) {
                 
             }
@@ -34,6 +33,8 @@ const Checkout = ({ cart }) => {
         </div>
     );
     
+    // link: https://stackoverflow.com/questions/56404819/usestate-hook-setstate-function-accessing-previous-state-value
+    // https://reactjs.org/docs/hooks-reference.html#functional-updates
     const nextStep = () => setActiveStep((preActiveStep) => preActiveStep + 1);
     const backStep = () => setActiveStep((preActiveStep) => preActiveStep - 1);
 
@@ -45,7 +46,13 @@ const Checkout = ({ cart }) => {
     
     const Form  = () => activeStep === 0 
         ? <AddressForm checkoutToken={checkoutToken} next={next}/>
-        : <PaymentForm checkoutToken={checkoutToken} shippingData={shippingData} />;
+        : <PaymentForm 
+            checkoutToken={checkoutToken} 
+            shippingData={shippingData} 
+            backStep={backStep} 
+            nextStep={nextStep}
+            onCaptureCheckout={onCaptureCheckout}
+        />;
 
     return (
         <>
